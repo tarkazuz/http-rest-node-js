@@ -29,7 +29,7 @@ function InMemoryBookStorage () {
   this.deleteBook = (id) => {
     const idx = books.ids.indexOf(id);
     if (idx > -1) {
-      books.ids.splice(idx, 1)
+      books.ids.splice(idx, 1);
       delete books.entries[id];
     }
   };
