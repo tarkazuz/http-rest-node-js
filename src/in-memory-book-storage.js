@@ -18,12 +18,13 @@ function InMemoryBookStorage () {
   };
 
   this.saveBook = (book) => {
-    const id = books.ids.length + 1;
+    const id = (books.ids.length + 1).toString();
     books.ids.push(id);
     books.entries[id] = {
       id: id,
       ...book
     };
+    return id;
   };
 
   this.deleteBook = (id) => {
