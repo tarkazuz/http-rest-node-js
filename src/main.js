@@ -1,6 +1,8 @@
 const PORT = 3000;
 const app = require('./app');
+const BookStorage = require('./in-memory-book-storage');
 
-app().listen(PORT, () => {
+const storage = new BookStorage();
+app(storage).listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
 });
