@@ -11,7 +11,7 @@ describe('InMemoryBookStorage', () => {
   });
 
   it('retrieveAllBooks: returns empty array initially', () => {
-    assert.deepEqual(storage.retrieveAllBooks(), []);
+    assert.deepStrictEqual(storage.retrieveAllBooks(), []);
   });
 
   it('saveBook: creates a book', () => {
@@ -25,7 +25,7 @@ describe('InMemoryBookStorage', () => {
       author: 'F. Scott Fitzgerald'
     });
 
-    assert.deepEqual(storage.retrieveAllBooks(), [
+    assert.deepStrictEqual(storage.retrieveAllBooks(), [
       {
         id: id1,
         title: 'The Fellowship of the Ring', 
@@ -40,14 +40,14 @@ describe('InMemoryBookStorage', () => {
   });
 
   it('retrieveBookById: returns book if existent', () => {
-    assert.equal(storage.retrieveBookById('1'), null);
+    assert.strictEqual(storage.retrieveBookById('1'), null);
     storage.saveBook({
       title: 'The Fellowship of the Ring', 
       author: 'J.R.R. Tolkiens'
     });
 
-    assert.deepEqual(storage.retrieveBookById('1'), {
-        id: 1,
+    assert.deepStrictEqual(storage.retrieveBookById('1'), {
+        id: '1',
         title: 'The Fellowship of the Ring', 
         author: 'J.R.R. Tolkiens'
       });
@@ -61,7 +61,7 @@ describe('InMemoryBookStorage', () => {
 
     storage.deleteBook('1');
 
-    assert.equal(storage.retrieveBookById('1'), null);
+    assert.strictEqual(storage.retrieveBookById('1'), null);
   });
 
   it('deleteAllBooks: deletes all books', () => {
@@ -77,6 +77,6 @@ describe('InMemoryBookStorage', () => {
 
     storage.deleteAllBooks();
 
-    assert.deepEqual(storage.retrieveAllBooks(), []);
+    assert.deepStrictEqual(storage.retrieveAllBooks(), []);
   });
 });
