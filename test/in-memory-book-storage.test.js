@@ -10,22 +10,24 @@ describe('InMemoryBookStorage', () => {
     storage = new InMemoryBookStorage();
   });
 
-  it('retrieveAllBooks: returns empty array initially', () => {
-    assert.deepStrictEqual(storage.retrieveAllBooks(), []);
+  it('should be empty initially', async () => {
+    const allBooks = await storage.retrieveAllBooks();
+
+    assert.deepStrictEqual(allBooks, []);
   });
 
-  it('saveBook: creates a book', () => {
-    const id1 = storage.saveBook({
+  it('should create a book', async () => {
+    const id1 = await storage.saveBook({
       title: 'The Fellowship of the Ring', 
       author: 'J.R.R. Tolkiens'
     });
-
-    const id2 = storage.saveBook({
+    const id2 = await storage.saveBook({
       title: 'The Great Gatsby', 
       author: 'F. Scott Fitzgerald'
     });
+    const allBooks = await storage.retrieveAllBooks();
 
-    assert.deepStrictEqual(storage.retrieveAllBooks(), [
+    assert.deepStrictEqual(allBooks, [
       {
         id: id1,
         title: 'The Fellowship of the Ring', 
@@ -39,44 +41,55 @@ describe('InMemoryBookStorage', () => {
     ]);
   });
 
-  it('retrieveBookById: returns book if existent', () => {
-    assert.strictEqual(storage.retrieveBookById('1'), null);
-    storage.saveBook({
+  it('should return single book if existent', async () => {
+    assert.strictEqual(await storage.retrieveBookById('1'), null);
+    await storage.saveBook({
       title: 'The Fellowship of the Ring', 
       author: 'J.R.R. Tolkiens'
     });
 
-    assert.deepStrictEqual(storage.retrieveBookById('1'), {
+    assert.deepStrictEqual(await storage.retrieveBookById('1'), {
         id: '1',
         title: 'The Fellowship of the Ring', 
         author: 'J.R.R. Tolkiens'
       });
   });
 
-  it('deleteBook: deletes a book', () => {
-    storage.saveBook({
-      title: 'The Fellowship of the Ring', 
-      author: 'J.R.R. Tolkiens'
+  describe('delete single', () => {
+    it('should delete a book', async () => {
+      await storage.saveBook({
+        title: 'The Fellowship of the Ring',
+        author: 'J.R.R. Tolkiens'
+      });
+      
+      await storage.deleteBook('1');
+      
+      assert.strictEqual(await storage.retrieveBookById('1'), null);
     });
 
-    storage.deleteBook('1');
-
-    assert.strictEqual(storage.retrieveBookById('1'), null);
+    it('should throw an error when id does not exist', async () => {
+      try {
+        await storage.deleteBook('1');
+        assert.fail('Expected an error.');
+      } catch (e) {
+        assert.strictEqual(e.message, 'No entry with id 1 found.');
+      }
+    });
   });
-
-  it('deleteAllBooks: deletes all books', () => {
-    storage.saveBook({
+    
+  it('should delete all books', async () => {
+    await storage.saveBook({
       title: 'The Fellowship of the Ring', 
       author: 'J.R.R. Tolkiens'
     });
 
-    storage.saveBook({
+    await storage.saveBook({
       title: 'The Great Gatsby', 
       author: 'F. Scott Fitzgerald'
     });
 
-    storage.deleteAllBooks();
+    await storage.deleteAllBooks();
 
-    assert.deepStrictEqual(storage.retrieveAllBooks(), []);
+    assert.deepStrictEqual(await storage.retrieveAllBooks(), []);
   });
 });

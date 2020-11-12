@@ -6,39 +6,42 @@ function InMemoryBookStorage () {
     entries: {}
   };
 
-  this.retrieveAllBooks = () => {
-    return books.ids.map(id => books.entries[id]);
-  };
+  this.retrieveAllBooks = () => new Promise(resolve => {
+    resolve(books.ids.map(id => books.entries[id]));
+  });
 
-  this.retrieveBookById = (id) => {
+  this.retrieveBookById = (id) => new Promise(resolve => {
     if (id && books.ids.includes(id)) {
-      return books.entries[id];
+      return resolve(books.entries[id]);
     }
-    return null;
-  };
+    resolve(null);
+  });
 
-  this.saveBook = (book) => {
+  this.saveBook = (book) => new Promise(resolve => {
     const id = (books.ids.length + 1).toString();
     books.ids.push(id);
     books.entries[id] = {
       id: id,
       ...book
     };
-    return id;
-  };
+    resolve(id);
+  });
 
-  this.deleteBook = (id) => {
-    const idx = books.ids.indexOf(id);
-    if (idx > -1) {
-      books.ids.splice(idx, 1);
-      delete books.entries[id];
+  this.deleteBook = (id) => new Promise((resolve, reject) => {
+    const index = books.ids.indexOf(id);
+    if (index < 0) {
+      return reject(new Error(`No entry with id ${id} found.`));
     }
-  };
+    books.ids.splice(index, 1);
+    delete books.entries[id];
+    resolve();
+  });
 
-  this.deleteAllBooks = () => {
+  this.deleteAllBooks = () => new Promise(resolve => {
     books.ids = [];
     books.entries = {};
-  };
+    resolve();
+  });
 };
 
 module.exports = InMemoryBookStorage;
