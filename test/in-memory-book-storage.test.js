@@ -40,7 +40,7 @@ describe('InMemoryBookStorage', () => {
   })
 
   it('should return single book if existent', async () => {
-    assert.equal(await storage.retrieveBookById('1'), null)
+    assert.equal(await storage.retrieveBookById('1'), undefined)
     await storage.saveBook({
       title: 'The Fellowship of the Ring',
       author: 'J.R.R. Tolkiens'
@@ -61,7 +61,7 @@ describe('InMemoryBookStorage', () => {
 
     await storage.deleteBook('1')
 
-    assert.equal(await storage.retrieveBookById('1'), null)
+    assert.equal(await storage.retrieveBookById('1'), undefined)
   })
 
   it('should throw an error when id does not exist', async () => {

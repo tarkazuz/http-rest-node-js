@@ -6,8 +6,8 @@
   "scripts": {
     "watch": "nodemon lib/server.js",
     "start": "node lib/server.js",
-    "test": "npx mocha",
-    "lint": "npx eslint"
+    "test": "mocha",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
