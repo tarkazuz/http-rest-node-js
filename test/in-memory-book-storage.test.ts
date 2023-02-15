@@ -1,8 +1,8 @@
 import assert from 'assert/strict'
-import InMemoryBookStorage from '../lib/in-memory-book-storage.js'
+import InMemoryBookStorage from '../src/lib/in-memory-book-storage.js'
 
 describe('InMemoryBookStorage', () => {
-  let storage
+  let storage: InMemoryBookStorage
 
   beforeEach(() => {
     storage = new InMemoryBookStorage()
@@ -17,7 +17,7 @@ describe('InMemoryBookStorage', () => {
   it('should create a book', async () => {
     const id1 = await storage.saveBook({
       title: 'The Fellowship of the Ring',
-      author: 'J.R.R. Tolkiens'
+      author: 'J.R.R. Tolkien'
     })
     const id2 = await storage.saveBook({
       title: 'The Great Gatsby',
@@ -29,7 +29,7 @@ describe('InMemoryBookStorage', () => {
       {
         id: id1,
         title: 'The Fellowship of the Ring',
-        author: 'J.R.R. Tolkiens'
+        author: 'J.R.R. Tolkien'
       },
       {
         id: id2,
@@ -43,20 +43,20 @@ describe('InMemoryBookStorage', () => {
     assert.equal(await storage.retrieveBookById('1'), undefined)
     await storage.saveBook({
       title: 'The Fellowship of the Ring',
-      author: 'J.R.R. Tolkiens'
+      author: 'J.R.R. Tolkien'
     })
 
     assert.deepEqual(await storage.retrieveBookById('1'), {
       id: '1',
       title: 'The Fellowship of the Ring',
-      author: 'J.R.R. Tolkiens'
+      author: 'J.R.R. Tolkien'
     })
   })
 
   it('should delete a book', async () => {
     await storage.saveBook({
       title: 'The Fellowship of the Ring',
-      author: 'J.R.R. Tolkiens'
+      author: 'J.R.R. Tolkien'
     })
 
     await storage.deleteBook('1')
@@ -71,7 +71,7 @@ describe('InMemoryBookStorage', () => {
   it('should delete all books', async () => {
     await storage.saveBook({
       title: 'The Fellowship of the Ring',
-      author: 'J.R.R. Tolkiens'
+      author: 'J.R.R. Tolkien'
     })
 
     await storage.saveBook({
