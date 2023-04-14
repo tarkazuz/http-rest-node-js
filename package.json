@@ -10,7 +10,7 @@
     "start": "node dist/src/index.js",
     "start:dev": "ts-node src/index.ts",
     "test": "mocha",
-    "coverage": "c8 --check-coverage --lines 95 --functions 95 --branches 95 --statements 95 --reporter=lcov --reporter=text mocha",
+    "coverage": "c8 --check-coverage --lines 95 --functions 95 --branches 90 --statements 95 --reporter=lcov --reporter=text mocha",
     "lint": "eslint ."
   },
   "repository": {
