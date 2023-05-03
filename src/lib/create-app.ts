@@ -1,6 +1,6 @@
-import express from 'express'
+import express, { ErrorRequestHandler } from 'express'
 import InMemoryBookStorage from './in-memory-book-storage.js'
-// import { RequestHandler } from 'express'
+import InvalidParam from './invalidParamError.js'
 // import { Book } from './in-memory-book-storage.js'
 
 export default function createApp (storage: InMemoryBookStorage) {
@@ -14,12 +14,17 @@ export default function createApp (storage: InMemoryBookStorage) {
     //     })
     // }
     app.get('/api/v1/books', async (req, res) => {
-        res.send([])
+        const getAllBooks = await storage.retrieveAllBooks()
+        if(!Object.keys(getAllBooks).length){
+            res.send([])
+        }else{
+            res.send(getAllBooks)}
+
     })
 
+    app.get('/api/v1/books/:id', async (req, res, next) => {
 
-    // type Params = {id: string}
-    app.get('/api/v1/books/:id', async (req, res) => {
+    try{
         const bookID = req.params.id
         const book = await storage.retrieveBookById(bookID)
 
@@ -28,6 +33,9 @@ export default function createApp (storage: InMemoryBookStorage) {
         }else{
             res.sendStatus(404)
         }
+    } catch(error){
+        next(error)
+    }
 
     })
 
@@ -40,5 +48,18 @@ export default function createApp (storage: InMemoryBookStorage) {
             .json(payload)
 
     })
+    const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+        if (error instanceof InvalidParam) {
+          res
+            .status(400)
+            .set('Content-Type', 'text/plain')
+            .send(error.message)
+        } else {
+          next(error)
+        }
+      }
+
+      app.use(errorHandler)
+
     return app
 }

@@ -1,3 +1,5 @@
+import InvalidParam from './invalidParamError.js'
+
 export type BookPayload = {
   title: string
   author: string
@@ -11,6 +13,14 @@ export default class InMemoryBookStorage {
 
   constructor(private books: Map<string, Book> = new Map()) { }
 
+  private validateID(id: string):void {
+    const parsedID = Number.parseInt(id)
+    const isValidID: boolean = parsedID > 0 && Number.isInteger(parsedID)
+    if (!isValidID) {
+      throw new InvalidParam
+    }
+  }
+
   async retrieveAllBooks() {
     return [
       ...this.books.values()
@@ -18,6 +28,7 @@ export default class InMemoryBookStorage {
   }
 
   async retrieveBookById(id: string) {
+    this.validateID(id)
     return this.books.get(id)
   }
 
